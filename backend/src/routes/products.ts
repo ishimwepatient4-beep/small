@@ -39,9 +39,8 @@ router.get('/', async (req, res) => {
     ]);
 
     res.json({ products, total, page, totalPages: Math.ceil(total / limit) });
-  } catch (error: any) {
-    console.error('Products list error:', error.message);
-    res.status(500).json({ error: 'Server error', detail: error.message });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

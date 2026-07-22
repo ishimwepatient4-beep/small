@@ -28,9 +28,8 @@ router.get('/', async (req, res) => {
       outOfStockItems,
       recentTransactions,
     });
-  } catch (error: any) {
-    console.error('Dashboard error:', error.message);
-    res.status(500).json({ error: 'Server error', detail: error.message });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

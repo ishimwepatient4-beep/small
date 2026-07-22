@@ -12,7 +12,14 @@ import dashboardRoutes from './routes/dashboard';
 import reportRoutes from './routes/reports';
 
 const app = express();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL,
+      connection_limit: 1,
+    },
+  },
+});
 
 app.use(cors({ 
   origin: [
