@@ -26,6 +26,8 @@ app.use(cors({
     'http://localhost:3000',
     'https://inventory-frontend-ten-flax.vercel.app',
     'https://inventory-frontend-axygwpxjc-ishimwepatient4-beeps-projects.vercel.app',
+    'https://small-inventory-system-p4pk1ysca-ishimwepatient4-beeps-projects.vercel.app',
+    'https://small-inventory-system-ishimwepatient4-beeps-projects.vercel.app',
   ],
   credentials: true 
 }));
