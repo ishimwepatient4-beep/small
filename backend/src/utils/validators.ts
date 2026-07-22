@@ -5,6 +5,12 @@ export const loginValidation = [
   body('password').notEmpty().withMessage('Password required'),
 ];
 
+export const registerValidation = [
+  body('name').trim().isLength({ min: 2, max: 50 }).withMessage('Name must be 2-50 characters'),
+  body('email').isEmail().withMessage('Valid email required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+];
+
 export const productValidation = [
   body('name').notEmpty().withMessage('Product name required'),
   body('sku').notEmpty().withMessage('SKU required'),

@@ -19,24 +19,52 @@ function EyeIcon({ visible }: { visible: boolean }) {
   );
 }
 
-export default function Login() {
+function CheckIcon({ ok }: { ok: boolean }) {
+  return (
+    <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full ${ok ? 'bg-green-500 text-white' : 'bg-gray-300 dark:bg-gray-600'}`}>
+      {ok && (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      )}
+    </span>
+  );
+}
+
+export default function Signup() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
+
+  const checks = {
+    length: password.length >= 6,
+    match: password === confirmPassword && confirmPassword.length > 0,
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
     setLoading(true);
     try {
-      await login(email, password);
+      await signup(name, email, password);
       navigate('/');
     } catch (err: any) {
-      const msg = err?.response?.data?.error || err?.response?.data?.errors?.[0]?.msg || 'Invalid email or password';
+      const msg = err?.response?.data?.error || err?.response?.data?.errors?.[0]?.msg || 'Registration failed. Please try again.';
       setError(msg);
     } finally {
       setLoading(false);
@@ -52,8 +80,8 @@ export default function Login() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create your account</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Start managing your inventory</p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
@@ -68,6 +96,19 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="John Doe"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                required
+                minLength={2}
+              />
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email address</label>
               <input
                 type="email"
@@ -80,20 +121,16 @@ export default function Login() {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                <Link to="/forgot-password" className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium">
-                  Forgot password?
-                </Link>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder="At least 6 characters"
                   className="w-full px-4 py-2.5 pr-11 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
                   required
+                  minLength={6}
                 />
                 <button
                   type="button"
@@ -106,6 +143,40 @@ export default function Login() {
               </div>
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Confirm password</label>
+              <div className="relative">
+                <input
+                  type={showConfirm ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter your password"
+                  className="w-full px-4 py-2.5 pr-11 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                  required
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  tabIndex={-1}
+                >
+                  <EyeIcon visible={showConfirm} />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 text-sm">
+              <span className="flex items-center gap-1.5">
+                <CheckIcon ok={checks.length} />
+                <span className={checks.length ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}>6+ characters</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckIcon ok={checks.match} />
+                <span className={checks.match ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}>Passwords match</span>
+              </span>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
@@ -114,17 +185,17 @@ export default function Login() {
               {loading ? (
                 <span className="inline-flex items-center gap-2">
                   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                  Signing in...
+                  Creating account...
                 </span>
-              ) : 'Sign In'}
+              ) : 'Create Account'}
             </button>
           </form>
         </div>
 
         <p className="text-center mt-6 text-sm text-gray-500 dark:text-gray-400">
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold">
-            Create account
+          Already have an account?{' '}
+          <Link to="/login" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold">
+            Sign in
           </Link>
         </p>
       </div>
