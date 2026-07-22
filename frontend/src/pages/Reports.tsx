@@ -12,9 +12,24 @@ export default function Reports() {
     queryFn: () => api.get(`/reports/${activeReport}`).then((r) => r.data),
   });
 
-  const handleExport = (format: 'pdf' | 'excel') => {
+  const handleExport = async (format: 'pdf' | 'excel') => {
     const token = localStorage.getItem('token');
-    window.open(`/api/reports/export/${format}/${activeReport}?token=${token}`, '_blank');
+    const url = `${import.meta.env.VITE_API_URL}/reports/export/${format}/${activeReport}`;
+    try {
+      const resp = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!resp.ok) throw new Error('Export failed');
+      const blob = await resp.blob();
+      const ext = format === 'pdf' ? 'pdf' : 'xlsx';
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${activeReport}-report.${ext}`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch {
+      alert('Failed to export report. Please try again.');
+    }
   };
 
   return (
