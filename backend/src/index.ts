@@ -40,7 +40,8 @@ app.get('/api/health', async (_req, res) => {
     await prisma.$queryRaw`SELECT 1`;
     res.json({ status: 'ok', db: 'connected' });
   } catch (err: any) {
-    res.status(500).json({ status: 'error', message: err.message });
+    console.error('Health check error:', err.message, err.stack);
+    res.status(500).json({ status: 'error', message: err.message, code: err.code, stack: process.env.NODE_ENV === 'production' ? undefined : err.stack });
   }
 });
 
