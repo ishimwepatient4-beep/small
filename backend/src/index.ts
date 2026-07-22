@@ -15,7 +15,12 @@ const app = express();
 const prisma = new PrismaClient();
 
 app.use(cors({ 
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:3000',
+    'https://inventory-frontend-ten-flax.vercel.app',
+    'https://inventory-frontend-axygwpxjc-ishimwepatient4-beeps-projects.vercel.app',
+  ],
   credentials: true 
 }));
 app.use(express.json());
