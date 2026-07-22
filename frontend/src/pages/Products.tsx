@@ -81,7 +81,7 @@ export default function Products() {
     setEditingId(product.id);
     reset(product);
     setImageFile(null);
-    setImagePreview(product.image ? (product.image.startsWith('http') ? product.image : `http://localhost:5000${product.image}`) : null);
+    setImagePreview(product.image ? (product.image.startsWith('http') ? product.image : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${product.image}`) : null);
     setShowModal(true);
   };
 
@@ -154,7 +154,7 @@ export default function Products() {
                     <div className="flex items-center gap-3">
                       {p.image && (
                         <img
-                          src={p.image.startsWith('http') ? p.image : `http://localhost:5000${p.image}`}
+                          src={p.image.startsWith('http') ? p.image : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${p.image}`}
                           alt={p.name}
                           className="w-10 h-10 rounded-lg object-cover"
                         />
