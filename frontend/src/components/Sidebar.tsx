@@ -23,7 +23,7 @@ export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col z-30">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">Inventory MVP</h1>
+        <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">Small Management</h1>
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {links.map((link) => (
