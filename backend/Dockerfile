@@ -9,6 +9,8 @@ RUN npx prisma generate
 
 COPY . .
 
+RUN npm run build
+
 EXPOSE 5000
 
-CMD ["sh", "-c", "npx prisma db push && npx prisma db seed && npm run dev"]
+CMD ["node", "dist/index.js"]
